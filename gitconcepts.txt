@@ -1,0 +1,6 @@
+
+--> git init :- to initialize empty git repo.
+
+--> git add . will stage all your changed files. To unstage the file use git reset <fileName> or . for all
+    git reset --hard will not only unstage the file but will also delete them forever.
+    

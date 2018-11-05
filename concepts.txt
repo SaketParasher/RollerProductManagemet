@@ -1,0 +1,63 @@
+
+-->  DIRECTIVES :- 
+
+     Custom HTML element or attributes used to power up and extend our HTML.
+     Custom directives :- We create a component and then use it using custom directive which uses to be the selector of component.
+
+     Builtin directives :- *ngIf , *ngFor . * represents the structural directives. These are present in BrowserModule which
+                           imported by AppModule ie. root module of the app.
+
+--> PROPERTY BINDING :- Allows us to bind us the property of an element to the value of a template expression.
+                        eg. <img [src]='product.imageUrl'>. []--> Binding target is property or attribute of an element.
+                        '' --> Binding source is enclosed into ''
+
+--> INTERPOLATION and PROPERTY BINDING both are one way ie. from component class to template ie. HTML.
+
+--> EVENT BINDING:- <button (click)='functionName()'>SHOW</button> 
+
+--> TWO WAY BINDING :- < input [(ngModel)] = 'propertyName' >
+                    [] --> property binding from component to template and () --> event binding from template to component.
+                    [()] --> banana in the box.
+
+        - ngModel is part of FormsModule so our components containing module needs to import it which haapens to be root module 
+          of our app in our case AppModule. So now all directives of FormsModule will be available for all the components 
+          declared by the AppModule.  
+
+--> Transforming Data with PIPES :- 
+    - pipes transform data before display.
+    - Built-in-Pipes :- date,number,decimal,percent,currency,json(to display content of an object as JSON string),
+                        slice(to slice a subset from a list),uppercase,lowercase.
+    - we can add pipes in interpolation {{product.productCode | lowercas}}. 
+    - we can add pipes in property bindings <img [title] = 'product.productName | uppercase' >   
+
+    - some pipe accepts parameters. e.g. currency pipe has 3 parameters 1) Desired currency code 'USD'.
+      2) A boolean value to indicate whether to display currency symbol and 3) digit info 1.2-2 ie. at least 1 digit to left of 
+         the decimal and at least 2 digits after the decimal and not more than 2 digits to right of the decimal.
+         {{product.productPrice | currency:'USD':true:'1.2-2'}}       
+
+--> INTERFACE :- A specification identifying a related set of properties and methods. A class commits to supporting the
+                 specification by implementing the interface.We can then use the interface as data type.
+               - ES5 and ES6 don't support interfaces but typescript does.So interfaces are transpiled out and are not find in 
+                 resulting javascript.ie. Interfaces are developement time only.Their purpose is to provide strong typing and 
+                 better tooling support as we build, debug and maintain our code.    
+
+--> CUSTOM PIPES:- The class should implement PipeTransform Interface which must have a method transform().The first param of 
+                   transform method is the value we are transforming, 2nd argument is what we need to perform the transformation
+                   We add @Pipe decorator to the class to define it as a pipe and we pass the name property of the pipe.
+                   We also need to import Pipe and PipeTransform from '@angular/core'
+                   To use the custom pipe in a template we need to add | and then pipename include any argument if needed
+                   seperated by :
+                   Then we need to tell our module about pipe in our case it is AppModule. So in app module we need to add
+                   our pipe in declarations array where we add all our components. 
+    
+--> LIFECYCLE-HOOKS :- A component has a lifecycle managed by the angular.
+            - OnInit :-  To perform any component initialization after angular has initialized the data bound properties.
+                          This is a good place to retrieve the data for the template from a backend service.
+
+            - OnChanges:- To perform action after angular sets data bound input properties.
+
+            - OnDestroy:- To perform cleanup before angular destroyes the component.   
+
+--> NESTED COMPONENTS :- 
+
+    1) Using Nested Component as Directive :- use the nested component directive into parent component.
