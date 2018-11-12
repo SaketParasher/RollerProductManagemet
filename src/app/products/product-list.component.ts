@@ -1,9 +1,8 @@
 
 import { Component,OnInit } from '@angular/core';
 import { IProduct } from './product';
-
+import { ProductService } from './product.service';
 @Component({
-    selector:'pm-products',
     //moduleId:module.id,
     templateUrl:'./product-list.component.html',
     styleUrls:['./product-list.component.css']
@@ -13,41 +12,13 @@ export class ProductListComponent implements OnInit{
     imageWidth:number = 50;
     imageMargin:number = 2;
     showImage:boolean = false;
-    filterText:string = 'cart';
-
-    products:IProduct[] = [
-        {
-            "productId": 1,
-            "productName": "Leaf Rake",
-            "productCode": "GDN-0011",
-            "releaseDate": "March 19, 2016",
-            "description": "Leaf rake with 48-inch wooden handle.",
-            "price": 19.95,
-            "starRating": 3.2,
-            "imageUrl": "https://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
-          },
-          {
-            "productId": 2,
-            "productName": "Garden Cart",
-            "productCode": "GDN-0023",
-            "releaseDate": "March 18, 2016",
-            "description": "15 gallon capacity rolling garden cart",
-            "price": 32.99,
-            "starRating": 4.2,
-            "imageUrl": "https://openclipart.org/image/300px/svg_to_png/58471/garden_cart.png"
-          },
-          {
-            "productId": 5,
-            "productName": "Hammer",
-            "productCode": "TBX-0048",
-            "releaseDate": "May 21, 2016",
-            "description": "Curved claw steel hammer",
-            "price": 8.9,
-            "starRating": 4.8,
-            "imageUrl": "https://openclipart.org/image/300px/svg_to_png/73/rejon_Hammer.png"
-          }
-    ];
+    filterText:string = '';
+    errMsg = '';
+    products:IProduct[];
     
+    constructor(private _productService:ProductService){
+        //this.products = _productService.getProducts();
+    }
     toggleImage():void{
         this.showImage = !this.showImage;
     };
@@ -55,5 +26,13 @@ export class ProductListComponent implements OnInit{
     // as our component implements OnInit it must have ngOnInit() method implemented.
     ngOnInit():void{
         console.log('Application Started');
-    };
+        //ngOnInit contains all initialization logic
+        this._productService.getProducts().subscribe((data) => this.products= data,err => this.errMsg = <any>err);   
+        //this._productService.getProducts().then((data) => this.products=data);
+        };
+    
+    onOutputEvent(event:string):void{
+        console.log('Event received by outer Component');
+        console.log(event);
+    }
 }

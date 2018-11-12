@@ -1,4 +1,6 @@
 
+
+/*************************************************    COMPONENTS   ******************************************************/
 -->  DIRECTIVES :- 
 
      Custom HTML element or attributes used to power up and extend our HTML.
@@ -60,4 +62,153 @@
 
 --> NESTED COMPONENTS :- 
 
-    1) Using Nested Component as Directive :- use the nested component directive into parent component.
+ 1) Using Nested Component as Directive :- use the nested component directive into parent component.
+ 
+ --> To get the data from container component , Nested component should exibit a property which can take inputs.
+     This is done using @Input decorator. Nested component should have a property with @Input decorator to take the input 
+     from Container component. 
+
+ --> Container component can pass data to Nested component by property binding. ie. the property which has @Input decorator
+     can be used as property binding in conatiner template where nested container selector is used to pass the data 
+     from container component to nested coponent. 
+
+--> Nested component TO Container Component :-- 
+    Nested component uses @output decorator on a property whose type is of EventEmitter<anyType> which have a emit property.
+    The same property is event binded within the teplate where this Nested component selector is used in Container component
+    template. Event binding of @output property is done and event handler function is written in container component class.
+    That event binding is triggered in container component whenever that @output property emits ie. emit() method is called 
+    on that property from Nested component.
+    StarComponent in our App uses Nested COmponents concepts.
+
+/******************************************************   SERVICES   **********************************************************/
+
+--> A Service is a class with a focused purpose.We create service for features :-
+    -- That are independent from any particular component.
+    -- To share data or logic across components.
+    -- To encapsulate external interactions such as data fetching and access.
+
+--> we register any service with angular. Angular then creates a single instance of the service class called singleton and
+    holds on to it.Specifically angular provides a build in injector . We register our services with angular injector which contains
+    an instance of created service instances.
+--> Service class should have @Injectable decorator.    
+
+--> If a component needs any service then component class defines the service as a dependency.The Angular Injector then Injects the 
+    service class Instance when the component class is Intantiated.This procees is called DEPENDENCY INJECTION.
+
+--> DI :- DI is a coding pattern in which a class receives the instance of objects it needs (dependencies) from an external source
+          rather than creating it on own.    
+
+--> We added the ProductDataService in app.component so that all childs of app component can use it. We added it in providers
+    array.
+
+--> Constructor is implicit to each class. We inject the service into component using constructor.
+    we pass an instance of service class as constructor parameter and then that parameter is used to assign it to a local variable 
+    of class.That variable may be private.    
+
+
+/*********************************************    HTTPS & OBSERVABLES   ****************************************************/
+
+--> Observables helps us manage Asynchronous data such as data coming from a backend service.
+--> It treat Events as a collection ie. an Array whose items arrive over a time.Angular uses RxJs(Rective extension) to use observable.
+
+--> Observables allows us to manipulate sets of events with operators. operators are methods on observables that compose new 
+    Observables.Each operator transform the observable in some way.Operator don't wait for all of the value to process them at once.
+    Rather operators process each value as it is emitted.
+    few operators are map,filter,take,merge etc. 
+
+--> Angular provides Http service to communicate with backend server. As Http is also a service we need to inject its dependency
+    into ProductDataService Class.
+
+--> In some cases @Injecatble decorator is optional but not as our ProductDataService class has an injected dependency(_http:Http)
+    @Injectable decorator is mandatory.
+--> Also before injecting a service as dependency of a component we need to register that service as provider with angular Injector.
+    The Https service provider registration is done in HttpModule included in '@angular/http' package.
+    So we need to import HttpModule from ng/http package and include it in imports array of app module which is the root module
+    of the app. imports array is for pulling in external modules.  
+
+
+/*********************************************    ROUTING   ****************************************************/
+
+--> Angular provides RouterModule in angular/router package that registers the router service provider with angular.
+    Then we need to import RouterModule in AppModule and then add it to the imports array of module.
+--> RouterModule provides us both RouterService and Router Directives.Now our component templates can use router directives.
+--> Importing RouterModule and adding it ti the imports array of our AppModule Registers the RouterService provider , 
+    declares the Router Directives and exposes the configured Routes.
+    How the RouterModule know about the configured Routes. We pas the configured Routes using forRoot([]) method and then we 
+    configure the routes in array passed to forRoot() method.
+
+--> After the head tag in index.html add <base href="/"> tag. This tag tells the router how to compose the navigation urls.Since 
+    the app folder is application route we will set the href for base tag to /.
+
+--> We will use Router Link Directive to tie a route to each of the navigation menu options.We will use [routerLink]="['/welcome']" .
+--> Then we will add <router-outlet></router-outlet> tag which acts as ng-app tag ie. the place where all the components gets rendered
+    based on route requested for.
+
+--> ProductDetailsComponent Route is configured in route configuration which takes product/:id ie. id as parameter from route.
+--> To pass the id in link while clicking on any element or productName requires an <a></a> with 
+    [routerLink]="['/product',product.productId]" . "/product" is the route and productId will get attached after it.
+
+--> We will use ActivatedRoute service from '@angular/route' module to fetch the parameter from the route.We need not to register
+    this service as this service is registered as a part of router module we added to the imports array of AppModule.
+    But we need to inject the ActivatedRoute Service as dependency into our product-details.component class constructor.
+    constructor(private _route:ActivatedRoute){}
+
+--> Then we will use +this._route.snapshot.params['id'] to get the parameter with id name defined in route configuration.
+    + bcz as the paramete is provided in string so to convert it into number.
+
+--> TO Navigate from code we uses Router service from '@angular/router' which is available in RouterModule.
+    Inject this service into constructor and then this._router.navigate(['/products']) to navigate back to product Details page.
+
+
+    /**********************************************   ROUTE GUARDS   ***********************************************************/
+
+    --> There may be times when we want to limit the access to any Route. We want Routes to be accessible to specific user such as 
+        an admin for example, or we want to confirm the user for navigating out from a page while filling a form.
+
+    --> Angular Router provides several Route Guards.
+        1) canActivate   :- To Guard Navigation to a Route.
+        2) canDeactivate :- To Guard Navigation Away from a Route.
+        3) Resolve  :- TO Pre-fetch data before activating a Route.
+        4) canLoad :- To prevent asynchronous routing.
+
+    --> We will implement a Guard class as a Service so we will use @Injectable decorator for the class.
+        This class should implement canActiavte Interface which leads to implement canActivate() method in the class whose
+        return type is boolean. We can also implement canDeactivate , Resolve and canLoad Interfaces depending on our requirement.
+        In this case canActiavte() method returns true to Activate the route and false to cancel the Route activation.
+        For more complex cases we can return a Promise or Observable from this method.
+
+    --> As the Guard class is a service we need to register the service provider with Angular's Injector.
+        Unlike the other services the Guard Service Provider must be provided at angular Module Level.Providing the Guard at 
+        Module level Angular can use the Guard for Routing at the Application Level.
+        So, we will add the ProductDetailGuard in providers array of App Module.  
+
+    --> We will add the guard for a particular Route at the place where routes are configured ie. in RouterModule.forRoot([])
+        {path:'./product/:id',canActivate: [ProductDetailsGuard],component:ProductDetailsComponent}
+    --> canActiavte() has a parameter of type ActivatedRouteSnapshot which contains info about a route at any particular moment in time
+     
+
+/****************************************************   ANGULAR MODULE   ********************************************************/
+
+--> ANgular Module is a class with NgModule decorator.It's purpose is to organise the pieces of application.Arrange them into 
+    cohesive block of functionality.Extend our application with capabilities from external libraries.
+
+--> Every component , Directive and Pipe we create belongs to a particular Module.Then Angular Module bootstraps our Root App Component
+--> Every Module bootstrap the application with RootComponent ie. This is the component which is loaded when application is 
+    launched.
+
+--> Exports array of a ngModule decorator allows us to shares an angular module's components, directives and pipes with other modules
+    We can export component,directives and pipes so that they can be pulled in when another module imports this module.
+    We can export Angular Modules such as Form Modules and Http Modules.
+    We can Re-export 3rd party modules such as Material Design.And we can re-export our own module.
+    Never Export a Service.Services are added to the Providers array of an angular module are registered with Root Application 
+    Injector making them available for injection into any class in the application so there is no point in exporting them.
+
+--> An Angular Module can be extended by Importing other Angular Modules.The Imports Array of the ngModule decorator allows us to 
+    import supporting modules that exports components pipe and directives.We then use those components directive and pipes withinh
+    the templates of components.We can also import 3rd party angular modules to use their capabilities.We can also import our 
+    own modules to extend our application with additinal features or share capabilities across several module.
+    Importing a Module doesn't provide access to it's imported Modules.
+
+--> Angular Modules can also register service provider for our application.We can register the services we develope .
+    Providers Array allows us to Register the service provider at application level. Component also provides providers array
+    where we can register the service providers at component level.

@@ -1,5 +1,25 @@
 <!--The whole content below can be removed with the new code.-->
-<div style="text-align:center">
+<!--<div style="text-align:center">
   
   <pm-products></pm-products>
+</div> -->
+
+<div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand">{{title}}</a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <!--routerLink directive of RouterModule to navigate to a component based on routes configured which importing the 
+              RouterModule in AppModule -->
+          <a class="nav-link" [routerLink]="['/welcome']">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/products']">Product List</a>
+        </li>
+      </ul>
+  </nav>
+  <div class="container">
+    <!--<ng-component></ng-component>-->
+    <router-outlet></router-outlet>
+  </div>
 </div>

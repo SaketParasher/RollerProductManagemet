@@ -28,20 +28,21 @@
               <th>Available</th>
               <th>Price</th>
               <th>5 Star Rating</th>
-            </tr>
+            </tr> 
           </thead>
           <tbody>
             <tr *ngFor='let product of products | ProductFilterPipe:filterText'>
               <td><img *ngIf='showImage' [src]='product.imageUrl' [title]="product.productName"
                         [style.width.px]='imageWidth' [style.margin.px]='imageMargin'></td> <!--PROPERTY BINDING-->
-              <td>{{product.productName}}</td>
+              <td><a [routerLink]="['/product',product.productId]">{{product.productName}}</a></td>
               <td>{{product.productCode | lowercase}}</td>
               <td>{{product.releaseDate}}</td>
               <td>{{product.price | currency:'INR':true:'1.2-2'}}</td>
               <td>
-                <ai-star></ai-star><!-- Using Nested Star Component -->
+                <!--starClicked is property binded to Nested component will be fired when @output property will fire-->
+                <ai-star [rating]="product.starRating" (starClicked)="onOutputEvent($event)"></ai-star><!-- Using Nested Star Component -->
               </td>
-            </tr>
+            </tr> 
           </tbody>
         </table>
       </div>
