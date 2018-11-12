@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { ProductService } from './products/product.service';
+//import { ProductService } from './products/product.service';
 
 @Component({
   selector: 'pm-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers:[ProductService]
+  //providers:[ProductService]
 })
 export class AppComponent {
   title = 'nG: Getting Started';
